@@ -7,7 +7,7 @@ const port: number = 3000;
 app.use("/", express.static(path.join(__dirname, "public")));
 
 app.use("/", (req: Request, res: Response): void => {
-    res.status(200).sendFile(path.join(__dirname, "/index.html"));
+    res.status(200).sendFile(path.join(__dirname, "/hw1.html"));
 });
 
 app.listen(port, () => {
