@@ -1,0 +1,60 @@
+red:
+  hosts:
+    vm01:
+      ansible_host: 209.94.58.98
+
+
+- name: Deploy Webserver
+  hosts: [red, blue]
+  remote_user: root
+
+  tasks:
+    - name: Ping
+      ansible.builtin.ping:
+    - name: Setup
+      ansible.builtin.shell: |
+        apt update
+        apt install git
+        apt install nodejs --assume-yes
+        apt install npm --assume-yes
+        apt install curl --assume-yes
+        apt install nginx --assume-yes
+    - name: Get Files 
+      ansible.builtin.shell: |
+        rm -rf CSE356-HW1
+        git clone https://github.com/PeteyLumpkins/CSE356-HW1.git   
+    - name: Configure Web Server
+      ansible.builtin.shell: |
+        mv /root/CSE356-HW1/nginx-config/server.txt /etc/nginx/sites-available/default
+        ln /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+        systemctl restart nginx
+        
+    - name: Configure Red Server 
+      ansible.builtin.shell: |
+        mv /root/CSE356-HW1/build/public/red.html /root/CSE356-HW1/build/public/hw1.html
+    
+    - name: Install Node Modules
+      ansible.builtin.shell: |
+        npm install
+        npm run start
+
+- name: Config Red
+
+  hosts: [red]
+  remote_user: root
+
+  tasks:
+    name: Configure Red Server
+    ansible.builtin.shell: |
+      mv /root/CSE356-HW1/build/public/red.html /root/CSE356-HW1/build/public/hw1.html
+
+- name: Config Blue
+
+  hosts: [blue]
+  remote_user: root
+
+  tasks:
+    name: Configure Blue Server
+    ansible.builtin.shell: |
+      mv /root/CSE356-HW1/build/public/blue.html /root/CSE356-HW1/build/public/hw1.html
+
