@@ -1,0 +1,16 @@
+- name: Install MongoDB Community
+  hosts: [localhost]
+
+  tasks:
+  - name: Get MongoDB Community Key
+    ansible.builtin.apt_key:
+      url: https://www.mongodb.org/static/pgp/server-6.0.asc
+      state: present
+  - name: Create MongoDB List File
+    ansible.builtin.shell: |
+      echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+  
+  - name: Install MongoDB Packages
+    ansible.builtin.apt:
+      name: mongodb-org
+      update_cache: yes
