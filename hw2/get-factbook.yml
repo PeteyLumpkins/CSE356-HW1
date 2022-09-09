@@ -1,0 +1,9 @@
+- name: Get Factbook Data
+  hosts: [localhost]
+
+  tasks:
+    - name: Get Files
+      ansible.builtin.git:
+        repo: https://github.com/factbook/factbook.json.git
+        dest: /root/factbook/
+        clone: yes
