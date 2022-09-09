@@ -1,0 +1,19 @@
+- name: Purge MongoDB
+  hosts: [localhost]
+
+  tasks:
+    - name: Stop Mongod 
+      ansible.builtin.service:
+        name: mongod
+        state: stopped
+
+    - name: Purge Mongod
+      ansible.builtin.apt:
+        name: mongod*
+        state: absent
+        purge: yes
+    
+    - name: Remove Database and Log Files
+      ansible.builtin.shell: |
+        rm -r /var/log/mongodb
+        rm -r /var/lib/mongodb
